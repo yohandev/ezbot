@@ -1,0 +1,6 @@
+**/.DS_Store
+
+remote/www/*
+!remote/www/index.html
+
+**/node_modules
