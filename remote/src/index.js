@@ -1,38 +1,80 @@
-// Entry-point: attach all event handlers, etc...
-import MICROPYTHON_BIN from "../../firmware/ESP32_GENERIC_S3-20250809-v1.26.0.bin";
+import { Log } from "./log";
+import { Firmware } from "./firmware";
+import { EspFlash } from "./upload/flash";
+import { MicroPythonFs } from "./upload/fs";
 
-/**
- * Upload the Micropython binary to the ESP32 at the given serial port,
- * then upload the firmware itself (python)
- */
-async function uploadFirmware(serialPort) {
-  const SOURCES = [
-    "main.py",
-    "motor.py",
-    "remote.py",
-    "aioble/__init__.py",
-    "aioble/central.py",
-    "aioble/client.py",
-    "aioble/core.py",
-    "aioble/device.py",
-    "aioble/l2cap.py",
-    "aioble/peripheral.py",
-    "aioble/security.py",
-    "aioble/server.py",
-  ];
+const logger = new Log();
 
-  // Fetch the Micropython binary
-  const micropythonBin = await (await fetch(MICROPYTHON_BIN)).arrayBuffer();
+async function uploadMicropython() {
+  const firmware = await Firmware.fetch();
 
-  // Fetch the firmware source files
-  const firmware = await Promise.all(
-    SOURCES.map(async (path) => {
-      const url = (await import("../../firmware/src/" + path)).default;
-      const contents = await (await fetch(url.toString())).text();
+  const port = await navigator.serial.requestPort();
+  const esp = new EspFlash(port, logger);
 
-      return { path, contents };
-    }),
+  logger.info("Connecting to bootloader...");
+  if (!(await esp.romInfo())) {
+    logger.error(
+      "Board isn't in bootloader mode. Hold BOOT and press RST, then try again.",
+    );
+    return false;
+  }
+
+  logger.info("Erasing flash...");
+  await esp.eraseFlash();
+
+  logger.info("Uploading MicroPython...");
+  await esp.writeFlash(firmware.micropython, logger.progress("Flash"));
+
+  logger.info("Done. Resetting device...");
+  await esp.softReset();
+
+  logger.cta(
+    'Press the physical RST button on your board, then click "Upload files".',
   );
+  await esp.waitForHardReset();
+
+  return true;
 }
 
-uploadFirmware(null);
+async function uploadPythonFiles() {
+  const firmware = await Firmware.fetch();
+
+  const port = await navigator.serial.requestPort();
+  const fs = new MicroPythonFs(port, logger);
+
+  try {
+    for (const { path, contents } of firmware.sourceFiles()) {
+      await fs.uploadFile(path, contents, logger.progress(path));
+    }
+    logger.info("Device is good to go!");
+  } finally {
+    await fs.close();
+  }
+}
+
+const uploadBtn = document.getElementById("upload-btn");
+const filesBtn = document.getElementById("files-btn");
+
+uploadBtn.addEventListener("click", async () => {
+  uploadBtn.disabled = true;
+  try {
+    const ok = await uploadMicropython();
+    if (ok) filesBtn.style.display = "";
+  } catch (e) {
+    logger.error(`Error: ${e.message}`);
+    console.error(e);
+    uploadBtn.disabled = false;
+  }
+});
+
+filesBtn.addEventListener("click", async () => {
+  filesBtn.style.display = "none";
+  try {
+    await uploadPythonFiles();
+  } catch (e) {
+    logger.error(`Error: ${e.message}`);
+    console.error(e);
+  } finally {
+    uploadBtn.disabled = false;
+  }
+});

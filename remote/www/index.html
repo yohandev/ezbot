@@ -1,12 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
         <title>ezbot remote</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                max-width: 600px;
+                margin: 2rem auto;
+                padding: 0 1rem;
+            }
+            #upload button {
+                padding: 0.5rem 1.5rem;
+                font-size: 1rem;
+                cursor: pointer;
+            }
+            #upload button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            #log {
+                margin-top: 1rem;
+                background: #111;
+                color: #0f0;
+                padding: 1rem;
+                height: 300px;
+                overflow-y: auto;
+                white-space: pre-wrap;
+                font-size: 0.85rem;
+                font-family: monospace;
+            }
+            @keyframes blink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.3; }
+            }
+            .log-blink {
+                animation: blink 1s ease-in-out infinite;
+            }
+        </style>
     </head>
     <body>
-        <script src="index.js"></script>
-        
+        <h1>ezbot</h1>
         <div id="upload">
+            <button id="upload-btn">Upload MicroPython</button>
+            <button id="files-btn" style="display:none">Upload files</button>
+            <pre id="log"></pre>
         </div>
+        <script src="index.js" defer></script>
     </body>
 </html>
