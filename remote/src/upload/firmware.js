@@ -1,4 +1,4 @@
-import MICROPYTHON_BIN from "../../firmware/ESP32_GENERIC_S3-20250809-v1.26.0.bin";
+import MICROPYTHON_BIN from "../../../firmware/ESP32_GENERIC_S3-20250809-v1.26.0.bin";
 
 export class Firmware {
   static SOURCES = [
@@ -43,7 +43,7 @@ export class Firmware {
 
     const files = await Promise.all(
       Firmware.SOURCES.map(async (path) => {
-        const url = (await import("../../firmware/src/" + path)).default;
+        const url = (await import("../../../firmware/src/" + path)).default;
         const contents = await (await fetch(url.toString())).text();
         
         return { path, contents };

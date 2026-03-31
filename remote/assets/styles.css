@@ -1,0 +1,96 @@
+body {
+    font-family: sans-serif;
+    margin: 2rem;
+    padding: 0;
+}
+
+/* ── Trigger button ── */
+#open-upload {
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* ── Modal overlay ── */
+#upload-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+#upload-overlay.open {
+    display: flex;
+}
+
+/* ── Modal dialog ── */
+#upload-modal {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 640px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#close-modal {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 0.2rem 0.4rem;
+    cursor: pointer;
+    color: #666;
+}
+
+#close-modal:hover {
+    color: #000;
+}
+
+/* ── Upload buttons ── */
+#upload-modal button:not(#close-modal) {
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+#upload-modal button:not(#close-modal):disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Log terminal ── */
+#upload-log {
+    background: #111;
+    color: #0f0;
+    padding: 1rem;
+    height: 280px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-size: 0.85rem;
+    font-family: monospace;
+    margin: 0;
+    border-radius: 4px;
+}
+
+/* ── Blinking CTA ── */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+}
+
+.log-blink {
+    animation: blink 1s ease-in-out infinite;
+}
