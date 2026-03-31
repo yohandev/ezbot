@@ -17,8 +17,11 @@ export class EspFlash {
   }
 
   async romInfo() {
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout connecting to bootloader")), 2000),
+    );
     try {
-      return await this.#loader.main();
+      return await Promise.race([this.#loader.main(), timeout]);
     } catch (e) {
       this.#logger.warn(`Could not connect to bootloader: ${e.message}`);
       try {
