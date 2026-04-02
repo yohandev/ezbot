@@ -2,5 +2,6 @@
 
 remote/www/*
 !remote/www/index.html
+upload/out/*
 
 **/node_modules
