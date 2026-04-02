@@ -132,6 +132,11 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.27.4.tgz#1f7ba71a3d6155d44a6faa8dbe249c62ab3e408c"
   integrity sha512-+knoa0BDoeXgkNvvV1vvbZX4+hizelrkwmGJBdT17t8FNPwG2lKemmuMZlmaNQ3ws3DKKCxpb4zRZEIp3UxFCg==
 
+"@types/w3c-web-serial@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@types/w3c-web-serial/-/w3c-web-serial-1.0.8.tgz#38338a26b45ffbcc85596c3940bcafeb90200529"
+  integrity sha512-QQOT+bxQJhRGXoZDZGLs3ksLud1dMNnMiSQtBA0w8KXvLpXX4oM4TZb6J0GgJ8UbCaHo5s9/4VQT8uXy9JER2A==
+
 base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
@@ -191,15 +196,20 @@ ieee754@^1.2.1:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
 
-jquery@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-4.0.0.tgz#95c33ac29005ff72ec444c5ba1cf457e61404fbb"
-  integrity sha512-TXCHVR3Lb6TZdtw1l3RTLf8RBWVGexdxL6AC8/e0xZKEpBflBsjh9/8LXw+dkNFuOyW9B7iB3O1sP7hS0Kiacg==
+nipplejs@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nipplejs/-/nipplejs-1.0.1.tgz#e8e7e02e25ad4661323ee76b9f2e1ba5184ff734"
+  integrity sha512-+GhZWy62hfGIo6qE7vkAbbSFPWDIf3KLxOXwOruryKO3e8Tm8bDMz9EyK+CUr6zqWUC2sT7jZjsQIUawndGzQA==
 
 pako@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/pako/-/pako-2.1.0.tgz#266cc37f98c7d883545d11335c00fbd4062c9a86"
   integrity sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==
+
+recursive-last-modified@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/recursive-last-modified/-/recursive-last-modified-1.0.6.tgz#099f1587f8647d51dad1d2b209c4f4f73ca3810f"
+  integrity sha512-5zIxmcHbPSxGFKEbTIPVntDYx0u7+nuiw1eEzbqrc6XIZlseYM3pVLb6nCoAWVtsIworbiBRJXPGotv8Eh+e2Q==
 
 tslib@^2.4.1:
   version "2.8.1"

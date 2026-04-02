@@ -1,11 +1,25 @@
-from typing import List, Literal
+import asyncio
+import json
+from math import cos, pi, sin
 
 import aioble as ble
 from bluetooth import UUID
-from typing_extensions import override
 
-Color = Literal["red", "blue", "green", "orange", "purple", "cyan"]
-Pane = Literal["center", "left", "right", "bottom"]
+
+class Color:
+    RED = "red"
+    BLUE = "blue"
+    GREEN = "green"
+    ORANGE = "orange"
+    PURPLE = "purple"
+    CYAN = "cyan"
+
+
+class Pane:
+    CENTER = "center"
+    LEFT = "left"
+    RIGHT = "right"
+    BOTTOM = "bottom"
 
 
 class Remote:
@@ -35,6 +49,7 @@ class Remote:
         #                 | the connection phase and notifies if any updates occur.
         #                 | Since this is infrequent, the format for this characteristic
         #                 | is just a JSON array.
+        self._name = name
         self._ble_service = ble.Service(Remote._EZBOT_UUID)
         self._ble_inputs_state = ble.Characteristic(
             self._ble_service, Remote._INPUTS_STATE, write_no_response=True
@@ -43,10 +58,12 @@ class Remote:
             self._ble_service, Remote._INPUTS_METADATA, notify=True, read=True
         )
 
-        self._inputs_state: List[Input] = []
+        self._inputs_state = []
         self._inputs_metadata = []
 
-    def joystick(self, *, pane: Pane = "center") -> "Joystick":
+        ble.register_services(self._ble_service)
+
+    def joystick(self, *, pane="center") -> "Joystick":
         """
         Add a new joystick to the remote control
         """
@@ -55,18 +72,18 @@ class Remote:
         self._inputs_metadata.append({"type": "joystick", "pane": pane})
         return input
 
-    def button(
-        self, *, color: Color = "red", pane: Pane = "bottom", latching=False
-    ) -> "Button":
+    def button(self, *, color=Color.RED, pane=Pane.BOTTOM, latching=False) -> "Button":
         """
         Add a new button to the remote control
         """
         input = Button()
         self._inputs_state.append(input)
-        self._inputs_metadata.append({"type": "button", "color": color, "pane": pane})
+        self._inputs_metadata.append(
+            {"type": "button", "color": color, "latchign": latching, "pane": pane}
+        )
         return input
 
-    def slider(self, pane: Pane = "right") -> "Slider":
+    def slider(self, pane=Pane.RIGHT) -> "Slider":
         """
         Add a new slider to the remote control. Sliders added to the left/right
         and center panes will be vertical, and those in the bottom pane will be
@@ -76,6 +93,43 @@ class Remote:
         self._inputs_state.append(input)
         self._inputs_metadata.append({"type": "slider", "pane": pane})
         return input
+
+    async def run(self) -> None:
+        """
+        Start the BLE server: publish metadata and advertise indefinitely,
+        re-advertising after each disconnection.
+        """
+        self._ble_inputs_metadata.write(json.dumps(self._inputs_metadata).encode())
+        while True:
+            print(f"Advertising as '{self._name}'...")
+            async with await ble.advertise(
+                250_000,
+                name=self._name,
+                services=[Remote._EZBOT_UUID],
+            ) as connection:
+                await self._serve(connection)
+
+    async def _serve(self, connection) -> None:
+        """
+        Process incoming input-state writes for the duration of a connection.
+        Resets all inputs to 0 after 100 ms of silence (sticky-input guard).
+        """
+        print(f"serving {connection.device}")
+        while True:
+            try:
+                await self._ble_inputs_state.written(250)
+                data = bytes(self._ble_inputs_state.read())
+                for i, inp in enumerate(self._inputs_state):
+                    if i < len(data):
+                        inp._apply_state(data[i])
+            except asyncio.TimeoutError:
+                for inp in self._inputs_state:
+                    inp._apply_state(0)
+            except Exception:
+                # Device disconnected or BLE error — reset inputs and exit
+                for inp in self._inputs_state:
+                    inp._apply_state(0)
+                break
 
 
 class Input:
@@ -100,6 +154,10 @@ class Joystick(Input):
     """
     A joystick input. This has an X and Y axis and snaps back to its center position
     when released.
+
+    State is encoded as polar coordinates:
+      * bits [7:3] — 5-bit direction (0–31, 11.25° per step, 0 = east, CCW)
+      * bits [2:0] — 3-bit magnitude (0–7, maps to 0.0–1.0)
     """
 
     def __init__(self, **info):
@@ -108,16 +166,20 @@ class Joystick(Input):
         """
         super().__init__()
 
-        self._x = 0
-        self._y = 0
+        self._x = 0.0
+        self._y = 0.0
         self._info = info
 
-    @override
     def _apply_state(self, state: int):
-        # State is encoded as polar coordinates:
-        #   * 5-bit direction (11.25º resolution)
-        #   * 3-bit magnitude
-        pass  # TODO
+        direction = (state >> 3) & 0x1F
+        magnitude = (state & 0x07) / 7.0
+        if magnitude == 0:
+            self._x = 0.0
+            self._y = 0.0
+        else:
+            angle = direction * (2 * pi / 32)
+            self._x = cos(angle) * magnitude
+            self._y = sin(angle) * magnitude
 
     @property
     def x(self) -> float:
@@ -136,13 +198,51 @@ class Joystick(Input):
 
 class Button(Input):
     """
-    A button input
+    A button input.
+
+    State is encoded as bit flags:
+      * bit 0 — currently held down
+      * bit 1 — pressed this frame (edge, set for one packet only)
+      * bit 2 — released this frame (edge, set for one packet only)
     """
 
-    @override
+    def __init__(self):
+        super().__init__()
+        self._down = False
+        self._pressed = False
+        self._released = False
+
     def _apply_state(self, state: int):
-        # State is encoded as follows (1-bit per field):
-        #   - Down?
-        #   - Pressed this frame?
-        #   - Released this frame?
-        pass  # TODO
+        self._down = bool(state & 0x01)
+        self._pressed = bool(state & 0x02)
+        self._released = bool(state & 0x04)
+
+    @property
+    def down(self) -> bool:
+        return self._down
+
+    @property
+    def pressed(self) -> bool:
+        return self._pressed
+
+    @property
+    def released(self) -> bool:
+        return self._released
+
+
+class Slider(Input):
+    """
+    A slider input. Value ranges from 0.0 to 1.0.
+    State is a single byte (0–255).
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._value = 0.0
+
+    def _apply_state(self, state: int):
+        self._value = state / 255.0
+
+    @property
+    def value(self) -> float:
+        return self._value

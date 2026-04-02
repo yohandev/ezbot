@@ -8,6 +8,9 @@
       "settings": {
         "basedpyright.analysis": {
           "stubPath": "./firmware/typings",
+          "extraPaths": [
+            "./firmware/src"
+          ]
         },
       },
     },

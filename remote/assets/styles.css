@@ -1,14 +1,148 @@
+/* ── Reset & page layout ── */
+*, *::before, *::after { box-sizing: border-box; }
+
 body {
     font-family: sans-serif;
-    margin: 2rem;
+    margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+    background: #1a1a2e;
+    color: #fff;
 }
 
-/* ── Trigger button ── */
+/* ── Header ── */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background: #111;
+    flex-shrink: 0;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
 #open-upload {
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
     cursor: pointer;
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 4px;
+}
+
+#open-upload:hover { background: #444; }
+
+/* ── Remote main area ── */
+#remote {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* ── Unconnected splash ── */
+#remote-unconnected {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#connect-btn {
+    font-size: 1.4rem;
+    padding: 1rem 3rem;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #2980b9;
+    color: #fff;
+    border: none;
+}
+
+#connect-btn:hover  { background: #3498db; }
+#connect-btn:active { background: #1a6ca8; }
+#connect-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Pane layout ── */
+#remote-layout {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+#pane-row {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+}
+
+.pane {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#pane-left, #pane-center, #pane-right {
+    flex: 1;
+}
+
+#pane-bottom {
+    height: 120px;
+    flex-shrink: 0;
+    border-top: 1px solid #333;
+}
+
+/* ── Joystick zone ── */
+.joystick-zone {
+    width: 180px;
+    height: 180px;
+    position: relative;
+}
+
+/* ── Remote buttons ── */
+.remote-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #fff;
+    font-weight: bold;
+    touch-action: none;
+}
+
+.remote-btn:active { filter: brightness(0.8); }
+
+.remote-btn-red    { background: #c0392b; }
+.remote-btn-blue   { background: #2980b9; }
+.remote-btn-green  { background: #27ae60; }
+.remote-btn-orange { background: #e67e22; }
+.remote-btn-purple { background: #8e44ad; }
+.remote-btn-cyan   { background: #16a085; }
+
+/* ── Sliders ── */
+.slider-wrap { display: flex; align-items: center; justify-content: center; }
+
+.slider-v {
+    writing-mode: vertical-lr;
+    direction: rtl;
+    height: 160px;
+}
+
+.slider-h {
+    width: 200px;
 }
 
 /* ── Modal overlay ── */
@@ -16,7 +150,7 @@ body {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     align-items: center;
     justify-content: center;
     z-index: 100;
@@ -29,6 +163,7 @@ body {
 /* ── Modal dialog ── */
 #upload-modal {
     background: #fff;
+    color: #000;
     border-radius: 8px;
     padding: 1.5rem;
     width: 640px;
@@ -54,9 +189,7 @@ body {
     color: #666;
 }
 
-#close-modal:hover {
-    color: #000;
-}
+#close-modal:hover { color: #000; }
 
 /* ── Upload buttons ── */
 #upload-modal button:not(#close-modal) {
