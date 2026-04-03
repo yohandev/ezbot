@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no"
+        />
+        <title>ezbot remote</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <header>
+            <h1>ezbot</h1>
+            <button id="open-upload">Upload firmware</button>
+        </header>
+
+        <main id="remote">
+            <div id="remote-unconnected">
+                <button id="remote-connect-button">Connect</button>
+            </div>
+            <div id="remote-layout" hidden>
+                <div class="pane-row">
+                    <div class="pane" id="pane-left"></div>
+                    <div class="pane" id="pane-center"></div>
+                    <div class="pane" id="pane-right"></div>
+                </div>
+                <div class="pane" id="pane-bottom"></div>
+            </div>
+        </main>
+
+        <!-- Upload firmware modal -->
+        <div id="upload-firmware-overlay">
+            <div id="upload-firmware-modal">
+                <button id="upload-firmware-close" aria-label="Close">
+                    &#x2715;
+                </button>
+                <h2>Upload firmware</h2>
+                <button id="upload-firmware-button">Upload</button>
+                <pre id="upload-firmware-log"></pre>
+            </div>
+        </div>
+
+        <script src="remote/index.js" type="module"></script>
+    </body>
+</html>

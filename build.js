@@ -3,10 +3,10 @@
  * ready for hosting on a CDN, in `out/`.
  *
  * This includes:
- *  - `out/index.html`: Entry point for the BLE remote control
- *  - `out/index.js`: Entry point for the BLE remote control
- *  - `out/upload.js`: Bundles `esptool` + the firmware as a binary string
+ *  - `out/remote`: Entry point for the BLE remote control
+ *  - `out/upload`: Bundles `esptool` + the firmware as a binary string
  *  - `out/cli.cjs`: Bundles `esptool` + the firmware + a CLI for rapidly flashing many devices
+ *  - A bunch of other files, depending on how esbuild decided to split the bundle
  *
  * The firmware flashing is not intended to be its own artifact, rather users should
  * upload the firmware to their boards using the web UI (a sub-menu in the remote control).
@@ -14,7 +14,7 @@
  * permission issues, so it's effectively a lot faster). This is offered as a one-command'er
  * which `curl`s the CLI script and runs it.
  *
- * The firmware uploader (`out/upload.js`) is a separate file since it's quite large (10 MB
+ * The firmware uploader (`out/upload`) is a separate file since it's quite large (10 MB
  * uncompressed) and isn't necessary every time.
  */
 import esbuild from "esbuild";
@@ -26,7 +26,7 @@ async function build() {
     bundle: true,
     minify: true,
     sourcemap: true,
-    target: ["chrome89", "firefox90", "safari15", "edge89", "node10.4"],
+    format: "esm",
     plugins: [firmwarePlugin],
   };
 
@@ -35,15 +35,23 @@ async function build() {
     entryPoints: ["src/cli/index.js"],
     outfile: "out/cli.cjs",
     platform: "node",
+    target: ["node10.4"],
     external: ["serialport"],
     ...options,
   });
 
   // Remote control (web)
   const webOptions = {
-    entryPoints: ["src/remote/index.js", "src/upload/index.js"],
+    entryPoints: [
+      "src/remote/index.js",
+      "src/upload/index.js",
+      "src/index.html",
+      "src/styles.css",
+    ],
     outdir: "out",
     platform: "browser",
+    target: ["chrome89", "firefox90", "safari15", "edge89"],
+    splitting: true,
     loader: { ".html": "copy" },
     ...options,
   };
@@ -60,7 +68,7 @@ async function build() {
       "Running at http://127.0.0.1:8000 (note: CLI won't be auto-rebuilt)",
     );
   } else {
-    await esbuild.build(options);
+    await esbuild.build(webOptions);
   }
 }
 
