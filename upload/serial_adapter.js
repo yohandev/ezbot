@@ -21,7 +21,37 @@ export class SerialPort extends EventTarget {
   }
 
   /**
-   * @param {{ path: string, vendorId: string?, productId: string? }} info
+   * @typedef {{ path: string, manufacturer: string?, serialNumber: string?, vendorId: string?, productId: string? }} PortInfo
+   * @returns {Promise<PortInfo[]>}
+   */
+  static async list(filters) {
+    const ports = await NodeSerialPort.list();
+
+    if (!filters || filters.length === 0) {
+      return ports;
+    }
+
+    return ports.filter((port) =>
+      filters.some((filter) => {
+        if (
+          filter.usbVendorId !== undefined &&
+          parseInt(port.vendorId, 16) !== filter.usbVendorId
+        ) {
+          return false;
+        }
+        if (
+          filter.usbProductId !== undefined &&
+          parseInt(port.productId, 16) !== filter.usbProductId
+        ) {
+          return false;
+        }
+        return true;
+      }),
+    );
+  }
+
+  /**
+   * @param {PortInfo} info
    * @see {@link SerialPort.create}
    */
   constructor(info) {

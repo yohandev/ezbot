@@ -5,18 +5,23 @@ import { ESPLoader, Transport } from "esptool-js";
 /**
  * @param {SerialPort} port
  */
-export async function uploadFirmware(port) {
+export async function uploadFirmware(port, name, writeLine) {
   const transport = new Transport(port);
   const loader = new ESPLoader({
     transport,
     baudrate: 460800,
+    terminal: { writeLine, write() {}, clean() {} },
   });
-  const chipInfo = await loader.main();
 
-  console.log(chipInfo);
+  // Try reading from bootloader ROM
+  await withTimeout(
+    loader.main(),
+    5000,
+    "Board isn't in bootloader mode. Hold BOOT and press RST!",
+  );
 
   await loader.writeFlash({
-    fileArray: fetchFirmware(),
+    fileArray: fetchFirmware(name),
     flashSize: "keep",
     eraseAll: false,
     compress: true,
@@ -29,7 +34,7 @@ export async function uploadFirmware(port) {
  *
  * Note: this used to be an actual fetch(...) before the binaries were inlined
  */
-function fetchFirmware() {
+function fetchFirmware(name) {
   if (!fetchFirmwareSingleton) {
     fetchFirmwareSingleton = [
       convertToBinaryString(micropython),
@@ -37,6 +42,8 @@ function fetchFirmware() {
     ];
   }
   const [micropythonBin, firmwareBin] = fetchFirmwareSingleton;
+
+  // TODO (yohang): string replace in the firmware with name
 
   return [
     { data: micropythonBin, address: 0x0 },
@@ -66,4 +73,11 @@ function convertToBinaryString(input) {
     out += String.fromCharCode.apply(null, chunk);
   }
   return out;
+}
+
+function withTimeout(promise, ms, msg = "timeout") {
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error(msg)), ms);
+  });
+  return Promise.race([promise, timeoutPromise]);
 }
