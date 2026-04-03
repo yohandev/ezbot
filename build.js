@@ -87,7 +87,7 @@ const firmwarePlugin = {
     build.onLoad({ filter: /.*/, namespace: "firmware-ns" }, async (_) => {
       return {
         contents: JSON.stringify(await firmware.build()),
-        loader: "binary",
+        loader: "json",
         watchDirs: [firmware.PATH],
       };
     });

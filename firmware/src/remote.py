@@ -74,15 +74,11 @@ class Remote:
         assert not self._running, (
             "Cannot add inputs (joystick, button, etc...) after calling Remote.run"
         )
+        
+        meta.update({"type": type, "pane": pane})
 
         self._inputs_state.append(input)
-        self._inputs_metadata.append(
-            {
-                "type": type,
-                "pane": pane,
-                **meta,
-            }
-        )
+        self._inputs_metadata.append(meta)
         return input
 
     def joystick(self, *, pane=Pane.CENTER) -> "Joystick":
