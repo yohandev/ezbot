@@ -1,11 +1,8 @@
-document
-  .getElementById("upload-firmware-button")
-  .addEventListener("click", async () => {
-    const { uploadFirmware } = await import("../upload");
+// TODO: wire-up buttons (connect to robot, open "upload firmware" modal)
 
-    const port = await navigator.serial.requestPort({
-      filters: [{ usbVendorId: 0x303a }],
-    });
+import { Robot } from "./robot";
+import { showUploadFirmwareModal } from "../upload/modal";
 
-    uploadFirmware(port, "robot #0", console.log);
-  });
+// NOTE: this is the entry point for the website
+
+console.log("Hello, world!");
