@@ -1,5 +1,10 @@
+/**
+ * Entry point for the firmware-uploading CLI
+ *
+ * This is mostly Claude lmao
+ */
 import { SerialPort } from "./serial_adapter";
-import { uploadFirmware } from ".";
+import { uploadFirmware } from "../upload";
 import {
   intro,
   spinner,
@@ -11,6 +16,20 @@ import {
   text,
 } from "@clack/prompts";
 import { setTimeout as sleep } from "node:timers/promises";
+import { rm } from "node:fs/promises";
+
+async function offerUninstall() {
+  const installDir = process.env.EZBOT_INSTALL_DIR;
+  if (!installDir) return;
+  const shouldDelete = await confirm({
+    message: "Delete the ezbot installation?",
+  });
+  if (!isCancel(shouldDelete) && shouldDelete) {
+    // await rm(installDir, { recursive: true, force: true });
+    log.error("TODO: quick check before running rm");
+    log.info("ezbot has been uninstalled.");
+  }
+}
 
 async function main() {
   intro(`\x1b[1m\x1b[96mezbot\x1b[0m\x1b[2m firmware uploader\x1b[0m`);
@@ -53,8 +72,9 @@ async function main() {
 
   const s = spinner();
 
-  process.on("SIGINT", () => {
+  process.on("SIGINT", async () => {
     s.clear();
+    await offerUninstall();
     outro("Buh-bye!");
     process.exit(0);
   });

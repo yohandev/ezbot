@@ -1,0 +1,18 @@
+{
+  "name": "ezbot",
+  "version": "1.0.0",
+  "description": "An easy platform for simple robots",
+  "main": "index.js",
+  "author": "Yohan Guyomard <yohang@mit.edu>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/w3c-web-serial": "^1.0.8",
+    "esbuild": "^0.28.0",
+    "recursive-last-modified": "^1.0.6"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.2.0",
+    "esptool-js": "^0.6.0",
+    "serialport": "^13.0.0"
+  }
+}

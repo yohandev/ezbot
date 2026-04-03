@@ -137,6 +137,11 @@
   resolved "https://registry.yarnpkg.com/@types/w3c-web-serial/-/w3c-web-serial-1.0.8.tgz#38338a26b45ffbcc85596c3940bcafeb90200529"
   integrity sha512-QQOT+bxQJhRGXoZDZGLs3ksLud1dMNnMiSQtBA0w8KXvLpXX4oM4TZb6J0GgJ8UbCaHo5s9/4VQT8uXy9JER2A==
 
+"@types/web-bluetooth@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.21.tgz#525433c784aed9b457aaa0ee3d92aeb71f346b63"
+  integrity sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==
+
 base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"

@@ -1,7 +1,7 @@
 **/.DS_Store
 
-remote/www/*
-!remote/www/index.html
-upload/out/*
+_remote/www/*
+!_remote/www/index.html
+out/*
 
 **/node_modules

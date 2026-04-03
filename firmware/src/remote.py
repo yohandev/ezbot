@@ -29,7 +29,7 @@ class Remote:
     this robot.
     """
 
-    _EZBOT_UUID = UUID("19b10000-e8f2-537e-4f6c-d104768a1214")
+    _EZBOT_SERVICE = UUID("19b10000-e8f2-537e-4f6c-d104768a1214")
     _INPUTS_STATE = UUID("19b10002-e8f2-537e-4f6c-d104768a1214")
     _INPUTS_METADATA = UUID("618d53d4-14bd-4376-b1a9-9ec5077aba46")
 
@@ -38,50 +38,64 @@ class Remote:
         Initiable the BLE server and begin advertising
         """
         # BLE Service     | self explanatory
-        # BLE User Inputs | remote writes the latest snapshot of the user input
+        # BLE Input State | remote writes the latest snapshot of the user input
         #                 | to this characteristic every N milliseconds. Dropped
         #                 | packets are ignored (we only care about the latest).
         #                 | The format is M bytes for M inputs (e.g. joysticks,
         #                 | buttons, etc...); each input somehow encodes its entire
         #                 | state in one byte.
-        # BLE Info        | get the list of currently registered inputs (e.g. buttons,
+        # BLE Input Meta  | get the list of currently registered inputs (e.g. buttons,
         #                 | joysticks, etc...). This is intended to be read during
-        #                 | the connection phase and notifies if any updates occur.
+        #                 | the connection phase.
         #                 | Since this is infrequent, the format for this characteristic
         #                 | is just a JSON array.
         self._name = name
-        self._ble_service = ble.Service(Remote._EZBOT_UUID)
+        self._ble_service = ble.Service(Remote._EZBOT_SERVICE)
         self._ble_inputs_state = ble.Characteristic(
             self._ble_service, Remote._INPUTS_STATE, write_no_response=True
         )
         self._ble_inputs_metadata = ble.Characteristic(
-            self._ble_service, Remote._INPUTS_METADATA, notify=True, read=True
+            self._ble_service, Remote._INPUTS_METADATA, read=True
         )
 
         self._inputs_state = []
         self._inputs_metadata = []
+        self._running = False
 
         ble.register_services(self._ble_service)
 
-    def joystick(self, *, pane="center") -> "Joystick":
+    def _add_input(self, input, type: str, pane: str, **meta):
+        """
+        Add an input to this remote
+
+        New inputs can't be added while the robot is already running, otherwise
+        connected remotes risk being out of sync
+        """
+        assert not self._running, (
+            "Cannot add inputs (joystick, button, etc...) after calling Remote.run"
+        )
+
+        self._inputs_state.append(input)
+        self._inputs_metadata.append(
+            {
+                "type": type,
+                "pane": pane,
+                **meta,
+            }
+        )
+        return input
+
+    def joystick(self, *, pane=Pane.CENTER) -> "Joystick":
         """
         Add a new joystick to the remote control
         """
-        input = Joystick()
-        self._inputs_state.append(input)
-        self._inputs_metadata.append({"type": "joystick", "pane": pane})
-        return input
+        return self._add_input(Joystick(), "joystick", pane)
 
     def button(self, *, color=Color.RED, pane=Pane.BOTTOM, latching=False) -> "Button":
         """
         Add a new button to the remote control
         """
-        input = Button()
-        self._inputs_state.append(input)
-        self._inputs_metadata.append(
-            {"type": "button", "color": color, "latchign": latching, "pane": pane}
-        )
-        return input
+        return self._add_input(Button(), "button", pane, color=color, latching=latching)
 
     def slider(self, pane=Pane.RIGHT) -> "Slider":
         """
@@ -89,10 +103,7 @@ class Remote:
         and center panes will be vertical, and those in the bottom pane will be
         horizontal
         """
-        input = Slider()
-        self._inputs_state.append(input)
-        self._inputs_metadata.append({"type": "slider", "pane": pane})
-        return input
+        return self._add_input(Slider(), "slider", pane)
 
     async def run(self) -> None:
         """
@@ -100,12 +111,13 @@ class Remote:
         re-advertising after each disconnection.
         """
         self._ble_inputs_metadata.write(json.dumps(self._inputs_metadata).encode())
+        self._running = True
         while True:
             print(f"Advertising as '{self._name}'...")
             async with await ble.advertise(
                 250_000,
                 name=self._name,
-                services=[Remote._EZBOT_UUID],
+                services=[Remote._EZBOT_SERVICE],
             ) as connection:
                 await self._serve(connection)
 
@@ -114,7 +126,7 @@ class Remote:
         Process incoming input-state writes for the duration of a connection.
         Resets all inputs to 0 after 100 ms of silence (sticky-input guard).
         """
-        print(f"serving {connection.device}")
+        print(f"Connected to {connection.device}")
         while True:
             try:
                 await self._ble_inputs_state.written(250)

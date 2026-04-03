@@ -1,8 +1,10 @@
 // import { showUploadModal } from "./upload";
 // import { initRemote } from "./remote";
 
-import "../assets/styles.css";
 import { uploadFirmware } from "./upload";
+
+import "file:../../upload/out/cli.cjs";
+import "../assets/styles.css";
 
 // document.getElementById("open-upload").addEventListener("click", showUploadModal);
 // initRemote();
