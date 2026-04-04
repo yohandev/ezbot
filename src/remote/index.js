@@ -1,6 +1,9 @@
 import { Robot } from "./robot";
 import { showInfoModal } from "../upload/modal";
 
+import bluefyLogo from "../assets/bluefy.webp";
+import chromeLogo from "../assets/chrome.svg";
+
 if (!navigator.bluetooth) {
   const ua = navigator.userAgent;
   const isIOS =
@@ -49,7 +52,7 @@ if (!navigator.bluetooth) {
   noBluetoothEl.innerHTML = `
     <p class="no-bt-hint">Web Bluetooth is required to connect to your robot. Your current browser doesn't support it.</p>
     <a class="no-bt-rec">
-      <img class="no-bt-icon" src="${isIOS ? "assets/bluefy.webp" : "assets/chrome.svg"}" alt="${name}" width="56" height="56">
+      <img class="no-bt-icon" src="${isIOS ? bluefyLogo : chromeLogo}" alt="${name}" width="56" height="56">
       <span class="no-bt-rec-text">
         <span class="no-bt-rec-name">Open in ${name}</span>
         <span class="no-bt-rec-store">${store}</span>
