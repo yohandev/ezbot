@@ -83,7 +83,7 @@ export class Robot {
     // BLE disconnect listener
     state.service.device.addEventListener("gattserverdisconnected", () => {
       clearInterval(this.#intervalId);
-      
+
       this.#intervalId = null;
       this.#onDisconnect.forEach((cb) => cb());
     });
@@ -101,6 +101,13 @@ export class Robot {
    */
   get name() {
     return this.#name;
+  }
+
+  /**
+   * Disconnect from this robot. Triggers the onDisconnect callbacks.
+   */
+  disconnect() {
+    this.#state.service.device.gatt.disconnect();
   }
 
   /**

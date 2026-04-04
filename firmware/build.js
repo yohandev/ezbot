@@ -2,6 +2,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { glob } from "glob";
 import fs from "node:fs/promises";
 import child_process from "node:child_process";
 import lastModified from "recursive-last-modified";
@@ -81,4 +82,8 @@ async function exists(path) {
   return true;
 }
 
-export default { PATH, build };
+export async function watchedFiles() {
+  return await glob(SRC_PATH + "/**/*.py");
+}
+
+export default { PATH, build, watchedFiles };

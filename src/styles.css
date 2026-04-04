@@ -1,286 +1,430 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensure the HTML `hidden` attribute always wins over any display rule */
+[hidden] {
+    display: none !important;
 }
 
 body {
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  font-family: sans-serif;
-  background: #111;
-  color: #fff;
-  user-select: none;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: sans-serif;
+    background: #111;
+    color: #fff;
+    user-select: none;
 }
 
 /* ── Header ── */
 
 header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px;
-  background: #1a1a1a;
-  border-bottom: 1px solid #333;
-  flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
 }
 
 header h1 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
 }
 
+/* Base style for any button placed in the header */
 header button {
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
-  border-radius: 6px;
-  padding: 6px 14px;
-  font-size: 0.85rem;
-  cursor: pointer;
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
 }
 
 header button:hover {
-  background: #444;
+    background: #444;
+}
+
+/* Right-side header slot: robot name + disconnect */
+#header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.robot-name {
+    font-size: 0.85rem;
+    color: #aaa;
 }
 
 /* ── Remote ── */
 
 main#remote {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
 #remote-unconnected {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
-#remote-unconnected button {
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 14px 32px;
-  font-size: 1rem;
-  cursor: pointer;
+#remote-connect-button {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
-#remote-unconnected button:hover {
-  background: #1d4ed8;
+#remote-connect-button:hover {
+    background: #1d4ed8;
+}
+
+/* "I don't have a robot!" — large tap target, muted */
+#open-info {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 12px 24px; /* ensures >= 44px tap height */
+    border-radius: 6px;
+}
+
+#open-info:hover {
+    color: #bbb;
 }
 
 #remote-container {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 /* ── Remote layout ── */
 
 .remote-layout {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Top grid: left / center / right. Empty panes collapse because
-   their content has no intrinsic width. */
+/* Top grid: left / center / right.
+   Empty panes collapse because their flex children have no intrinsic width. */
 .remote-top-grid {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  overflow: hidden;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    overflow: hidden;
 }
 
 .remote-pane {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
 }
 
 .remote-pane-bottom {
-  height: 120px;
-  flex-shrink: 0;
-  flex-direction: row;
-  justify-content: space-evenly;
-  padding: 16px;
-  border-top: 1px solid #333;
+    height: 100px;
+    flex-shrink: 0;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 12px 16px;
+    border-top: 1px solid #333;
 }
 
 .remote-pane-bottom:empty {
-  height: 0;
-  border-top: none;
-  padding: 0;
+    height: 0;
+    border-top: none;
+    padding: 0;
 }
 
 /* ── Joystick ── */
 
+/* flex: 1 + align-self: stretch so that:
+   - a single joystick fills the whole pane
+   - two joysticks side-by-side each take half the pane width and full height */
 .joystick-zone {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  touch-action: none;
+    flex: 1;
+    align-self: stretch;
+    min-width: 0;
+    position: relative;
+    touch-action: none;
 }
 
 /* ── Buttons ── */
 
 .button {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  touch-action: none;
-  cursor: pointer;
-  opacity: 0.85;
-  transition: opacity 0.08s, transform 0.08s;
-  flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    touch-action: none;
+    cursor: pointer;
+    opacity: 0.85;
+    transition:
+        opacity 0.08s,
+        transform 0.08s;
+    flex-shrink: 0;
 }
 
 .button:active {
-  opacity: 1;
-  transform: scale(0.92);
+    opacity: 1;
+    transform: scale(0.92);
 }
 
 .button.latched {
-  opacity: 1;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.45);
+    opacity: 1;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.45);
 }
 
-.button-red    { background: #e53e3e; }
-.button-blue   { background: #3182ce; }
-.button-green  { background: #38a169; }
-.button-orange { background: #dd6b20; }
-.button-purple { background: #805ad5; }
-.button-cyan   { background: #00b5d8; }
+.button-red {
+    background: #e53e3e;
+}
+.button-blue {
+    background: #3182ce;
+}
+.button-green {
+    background: #38a169;
+}
+.button-orange {
+    background: #dd6b20;
+}
+.button-purple {
+    background: #805ad5;
+}
+.button-cyan {
+    background: #00b5d8;
+}
 
 /* ── Sliders ── */
 
 .slider {
-  -webkit-appearance: none;
-  appearance: none;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  outline: none;
-  cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
 }
 
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #fff;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
 }
 
 .slider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #fff;
-  border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
 }
 
 .slider-horizontal {
-  width: 80%;
-  height: 8px;
+    width: 80%;
+    height: 8px;
 }
 
-/* Vertical slider: writing-mode rotates the track without layout tricks */
+/* Vertical slider: writing-mode avoids layout hacks */
 .slider-vertical {
-  writing-mode: vertical-lr;
-  direction: rtl; /* bottom = 0, top = max (feels natural) */
-  height: 60%;
-  width: 8px;
+    writing-mode: vertical-lr;
+    direction: rtl; /* bottom = 0, top = max (intuitive) */
+    height: 70%;
+    width: 8px;
 }
 
-/* ── Upload firmware modal ── */
+/* ── Info modal ── */
 
-#upload-firmware-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
+#info-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999; /* above nipplejs elements which render at ~999 */
+    align-items: center;
+    justify-content: center;
 }
 
-#upload-firmware-overlay.active {
-  display: flex;
+#info-overlay.active {
+    display: flex;
 }
 
-#upload-firmware-modal {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 24px;
-  min-width: 360px;
-  max-width: 600px;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
+#info-modal {
+    width: min(600px, 92vw);
+    height: 80vh;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden; /* children scroll, the modal itself never resizes */
 }
 
-#upload-firmware-modal h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
+#info-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
 }
 
-#upload-firmware-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  line-height: 1;
-  padding: 4px;
+#info-close:hover {
+    color: #aaa;
 }
 
-#upload-firmware-close:hover {
-  color: #aaa;
+/* Scrollable content area inside the modal */
+#info-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#info-content h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding-right: 32px; /* don't overlap the close button */
+}
+
+#info-content h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 8px;
+    color: #ccc;
+}
+
+#info-content p {
+    font-size: 0.9rem;
+    color: #aaa;
+    line-height: 1.5;
+}
+
+.code-block {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    font-family: monospace;
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-break: break-all;
 }
 
 #upload-firmware-button {
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  align-self: flex-start;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    align-self: flex-start;
 }
 
 #upload-firmware-button:hover {
-  background: #1d4ed8;
+    background: #1d4ed8;
 }
 
+/* ── Collapsible sections ── */
+
+.collapsible {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.collapsible-toggle {
+    cursor: pointer;
+}
+
+/* Rotating chevron indicator */
+.collapsible-toggle::after {
+    content: "▸";
+    font-size: 1em;
+    opacity: 0.75;
+    display: inline-block;
+    margin-left: 10px;
+    transition: transform 0.15s;
+}
+
+.collapsible.expanded .collapsible-toggle::after {
+    transform: rotate(90deg);
+}
+
+/* Collapsed body is a click target to expand */
+.collapsible:not(.expanded) .collapsible-body {
+    cursor: pointer;
+}
+
+/* Collapsed: show ~3 lines then fade out */
+.collapsible-body {
+    position: relative;
+    max-height: 4.5em; /* ~3 lines at 1.5 line-height */
+    overflow: hidden;
+}
+
+.collapsible-body::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3em;
+    background: linear-gradient(to bottom, transparent, #1a1a1a);
+    pointer-events: none;
+}
+
+.collapsible.expanded .collapsible-body {
+    max-height: unset;
+}
+
+.collapsible.expanded .collapsible-body::after {
+    display: none;
+}
+
+/* Fixed-height log — never expands the modal */
 #upload-firmware-log {
-  font-family: monospace;
-  font-size: 12px;
-  background: #000;
-  color: #0f0;
-  padding: 12px;
-  border-radius: 4px;
-  overflow-y: auto;
-  flex: 1;
-  max-height: 300px;
-  white-space: pre-wrap;
-  word-break: break-all;
+    height: 160px;
+    flex-shrink: 0;
+    font-family: monospace;
+    font-size: 12px;
+    background: #1e1e1e;
+    color: #9cdcfe;
+    padding: 12px;
+    border-radius: 4px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
 }

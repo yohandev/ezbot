@@ -89,6 +89,7 @@ const firmwarePlugin = {
         contents: JSON.stringify(await firmware.build()),
         loader: "json",
         watchDirs: [firmware.PATH],
+        watchFiles: await firmware.watchedFiles(),
       };
     });
   },
