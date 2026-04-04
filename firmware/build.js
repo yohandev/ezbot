@@ -9,7 +9,7 @@ import lastModified from "recursive-last-modified";
 export const PATH = dirname(fileURLToPath(import.meta.url));
 
 const SRC_PATH = join(PATH, "src");
-const MICROPYTHON_BIN = join(PATH, "bin/ESP32_GENERIC_S3-20250809-v1.26.0.bin");
+const MICROPYTHON_BIN = join(PATH, "bin/ESP32_GENERIC_S3-20251209-v1.27.0.bin");
 
 // Partition magic numbers specifically for the ESP32S3 WROOM
 //

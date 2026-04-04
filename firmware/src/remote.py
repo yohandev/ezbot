@@ -110,12 +110,18 @@ class Remote:
         self._running = True
         while True:
             print(f"Advertising as '{self._name}'...")
-            async with await ble.advertise(
-                250_000,
-                name=self._name,
-                services=[Remote._EZBOT_SERVICE],
-            ) as connection:
-                await self._serve(connection)
+            try:
+                async with await ble.advertise(
+                    250_000,
+                    name=self._name,
+                    services=[Remote._EZBOT_SERVICE],
+                ) as connection:
+                    await self._serve(connection)
+            except asyncio.CancelledError | KeyboardInterrupt:
+                break
+            except Exception as e:
+                print("Error in BLE task: ", e)
+                await asyncio.sleep(0.1)
 
     async def _serve(self, connection) -> None:
         """
@@ -133,6 +139,8 @@ class Remote:
             except asyncio.TimeoutError:
                 for inp in self._inputs_state:
                     inp._apply_state(0)
+            except KeyboardInterrupt:
+                break
             except Exception:
                 # Device disconnected or BLE error — reset inputs and exit
                 for inp in self._inputs_state:
