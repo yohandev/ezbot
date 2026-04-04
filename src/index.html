@@ -18,7 +18,11 @@
         <main id="remote">
             <div id="remote-unconnected">
                 <button id="remote-connect-button">Connect</button>
+                <p id="connect-error" hidden></p>
                 <a id="open-info" href="#">I don't have a robot!</a>
+            </div>
+            <div id="remote-connecting" hidden>
+                <div class="spinner"></div>
             </div>
             <div id="remote-container" hidden>
                 <!-- Remote will go here once connected -->

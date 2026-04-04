@@ -99,6 +99,11 @@ main#remote {
 }
 
 /* "I don't have a robot!" — large tap target, muted */
+#connect-error {
+  font-size: 0.85rem;
+  color: #f87171;
+}
+
 #open-info {
     color: #888;
     text-decoration: none;
@@ -109,6 +114,25 @@ main#remote {
 
 #open-info:hover {
     color: #bbb;
+}
+
+#remote-connecting {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 #remote-container {
