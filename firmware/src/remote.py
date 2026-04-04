@@ -74,7 +74,7 @@ class Remote:
         assert not self._running, (
             "Cannot add inputs (joystick, button, etc...) after calling Remote.run"
         )
-        
+
         meta.update({"type": type, "pane": pane})
 
         self._inputs_state.append(input)
@@ -108,6 +108,8 @@ class Remote:
         """
         self._ble_inputs_metadata.write(json.dumps(self._inputs_metadata).encode())
         self._running = True
+        
+        asyncio.create_task(self._serve())
         while True:
             print(f"Advertising as '{self._name}'...")
             try:
@@ -116,19 +118,19 @@ class Remote:
                     name=self._name,
                     services=[Remote._EZBOT_SERVICE],
                 ) as connection:
-                    await self._serve(connection)
+                    print(f"Connected to {connection.device}")
+                    await connection.disconnected()
             except asyncio.CancelledError | KeyboardInterrupt:
                 break
             except Exception as e:
                 print("Error in BLE task: ", e)
                 await asyncio.sleep(0.1)
 
-    async def _serve(self, connection) -> None:
+    async def _serve(self) -> None:
         """
-        Process incoming input-state writes for the duration of a connection.
-        Resets all inputs to 0 after 100 ms of silence (sticky-input guard).
+        Process incoming input-state writes.
+        Resets all inputs to 0 after 250 ms of silence (sticky-input guard).
         """
-        print(f"Connected to {connection.device}")
         while True:
             try:
                 await self._ble_inputs_state.written(250)
