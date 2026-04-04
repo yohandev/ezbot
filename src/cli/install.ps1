@@ -1,5 +1,5 @@
 $ErrorActionPreference = "Stop"
-$BASE_URL = "https://YOUR_CDN_URL"
+$EZBOT = if ($env:EZBOT) { $env:EZBOT } else { "https://YOUR_CDN_URL" }
 $INSTALL_DIR = "$env:USERPROFILE\.ezbot"
 $BIN_DIR = "$INSTALL_DIR\bin"
 
@@ -19,7 +19,7 @@ Write-Host "Installing ezbot CLI..."
 New-Item -ItemType Directory -Force -Path $INSTALL_DIR, $BIN_DIR | Out-Null
 
 Write-Host "Downloading CLI bundle..."
-Invoke-WebRequest -Uri "$BASE_URL/cli.cjs" -OutFile "$INSTALL_DIR\cli.cjs"
+Invoke-WebRequest -Uri "$EZBOT/cli.cjs" -OutFile "$INSTALL_DIR\cli.cjs"
 
 Write-Host "Installing native serial port driver..."
 '{"name":"ezbot-runtime","private":true,"dependencies":{"serialport":"^13.0.0"}}' |

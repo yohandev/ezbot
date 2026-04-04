@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-BASE_URL="CDN_PLACEHOLDER"
+EZBOT="${EZBOT:-CDN_PLACEHOLDER}"
 INSTALL_DIR="$HOME/.ezbot"
 BIN_DIR="$INSTALL_DIR/bin"
 
@@ -24,7 +24,7 @@ echo "Installing ezbot CLI..."
 mkdir -p "$INSTALL_DIR" "$BIN_DIR"
 
 echo "Downloading CLI bundle..."
-curl -fsSL "$BASE_URL/cli.cjs" -o "$INSTALL_DIR/cli.cjs"
+curl -fsSL "$EZBOT/cli.cjs" -o "$INSTALL_DIR/cli.cjs"
 
 echo "Installing native serial port driver (this may take a moment)..."
 printf '{"name":"ezbot-runtime","private":true,"dependencies":{"serialport":"^13.0.0"}}' \

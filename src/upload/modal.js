@@ -3,6 +3,21 @@ let uploadModulePromise = null;
 const overlayEl = document.getElementById("info-overlay");
 const logEl = document.getElementById("upload-firmware-log");
 
+document.querySelectorAll(".code-block").forEach((el) => {
+  el.textContent = el.textContent.replace(/\[CDN_URL\]/g, window.location.origin);
+
+  const wrap = document.createElement("div");
+  wrap.className = "code-block-wrap";
+  el.replaceWith(wrap);
+  wrap.appendChild(el);
+
+  wrap.addEventListener("click", () => {
+    navigator.clipboard.writeText(el.textContent);
+    wrap.dataset.copied = "";
+    setTimeout(() => delete wrap.dataset.copied, 1500);
+  });
+});
+
 export function showInfoModal() {
   // Begin lazy-loading the large upload bundle in the background
   uploadModulePromise ??= import(".");
