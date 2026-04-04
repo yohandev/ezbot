@@ -1,19 +1,38 @@
+let uploadModulePromise = null;
+
+const overlayEl = document.getElementById("upload-firmware-overlay");
+const logEl = document.getElementById("upload-firmware-log");
+
 export function showUploadFirmwareModal() {
-  // TODO
+  // Begin lazy-loading the large upload bundle in the background
+  uploadModulePromise ??= import(".");
+
+  overlayEl.classList.add("active");
 }
 
-// EXAMPLE: lazy-loading the upload module (big file, 30 MB) and flashing a board
-// 
-// TODO: whenever the upload modal is opened, start this import in the background
-// (kind of like a prefetch). Then, upload firmware if the button is pressed.
+document
+  .getElementById("upload-firmware-close")
+  .addEventListener("click", () => {
+    overlayEl.classList.remove("active");
+  });
+
 document
   .getElementById("upload-firmware-button")
   .addEventListener("click", async () => {
-    const { uploadFirmware } = await import(".");
+    const writeLine = (msg) => {
+      logEl.textContent += msg + "\n";
+      logEl.scrollTop = logEl.scrollHeight;
+    };
 
-    const port = await navigator.serial.requestPort({
-      filters: [{ usbVendorId: 0x303a }],
-    });
-
-    uploadFirmware(port, "robot #0", console.log);
+    try {
+      const { uploadFirmware } = await (uploadModulePromise ??= import("."));
+      const port = await navigator.serial.requestPort({
+        filters: [{ usbVendorId: 0x303a }],
+      });
+      writeLine("Starting upload...");
+      await uploadFirmware(port, "ezbot", writeLine);
+      writeLine("Done.");
+    } catch (err) {
+      writeLine(`Error: ${err.message}`);
+    }
   });

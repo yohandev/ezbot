@@ -1,8 +1,25 @@
-// TODO: wire-up buttons (connect to robot, open "upload firmware" modal)
-
 import { Robot } from "./robot";
 import { showUploadFirmwareModal } from "../upload/modal";
 
-// NOTE: this is the entry point for the website
+const remoteContainer = document.getElementById("remote-container");
+const remoteUnconnectedEl = document.getElementById("remote-unconnected");
 
-console.log("Hello, world!");
+document
+  .getElementById("remote-connect-button")
+  .addEventListener("click", async () => {
+    const robot = await Robot.connect();
+
+    remoteContainer.appendChild(robot.domElement);
+    remoteUnconnectedEl.hidden = true;
+    remoteContainer.hidden = false;
+
+    robot.onDisconnect(() => {
+      robot.domElement.remove();
+      remoteContainer.hidden = true;
+      remoteUnconnectedEl.hidden = false;
+    });
+  });
+
+document.getElementById("open-upload").addEventListener("click", () => {
+  showUploadFirmwareModal();
+});

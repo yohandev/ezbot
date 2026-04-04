@@ -14,25 +14,29 @@ export class Robot {
   // Event listeners
   #onConnect = [];
   #onDisconnect = [];
-  #onUpdateInputs = [];
 
   #name;
   #state;
   #inputs;
+  #container;
+  #intervalId = null;
 
+  /**
+   * @returns {Promise<Robot>}
+   */
   static async connect() {
     const device = await navigator.bluetooth.requestDevice({
-      filters: [{ services: [Robot.#EZBOT_SERVICE] }],
+      filters: [{ services: [this.#EZBOT_SERVICE] }],
     });
     const gatt = await device.gatt.connect();
 
-    const service = await gatt.getPrimaryService(Robot.#EZBOT_SERVICE);
-    const state = await service.getCharacteristic(Robot.#INPUTS_STATE);
-    const meta = await service.getCharacteristic(Robot.#INPUTS_METADATA);
+    const service = await gatt.getPrimaryService(this.#EZBOT_SERVICE);
+    const state = await service.getCharacteristic(this.#INPUTS_STATE);
+    const meta = await service.getCharacteristic(this.#INPUTS_METADATA);
 
-    const name = ""; // TODO how to get this?
+    const name = device.name ?? "";
     const layout = JSON.parse(new TextDecoder().decode(await meta.readValue()));
-    
+
     return new Robot(name, state, layout);
   }
 
@@ -50,19 +54,39 @@ export class Robot {
     this.#state = state;
     this.#inputs = layout.map((meta) => Input.fromMeta(meta));
 
-    // TODO: create the DOM elements for the left, right, center, bottom panes
-    // TODO: add inputs to this pane
-    // 
-    // TODO: connect the callbacks (onConnect, onDisconnect)
-  }
+    // Build remote UI
+    this.#container = document.createElement("div");
+    this.#container.className = "remote-layout";
+    this.#container.innerHTML = `
+      <div class="remote-top-grid">
+        <div class="remote-pane remote-pane-left"></div>
+        <div class="remote-pane remote-pane-center"></div>
+        <div class="remote-pane remote-pane-right"></div>
+      </div>
+      <div class="remote-pane remote-pane-bottom"></div>
+    `;
 
-  /**
-   * @param {() => void} cb
-   */
-  onConnect(cb) {
-    this.#onConnect.push(cb);
-    
-    // TODO: (re)start interval to send inputs to characteristic
+    for (let i = 0; i < this.#inputs.length; i++) {
+      const pane = layout[i].pane ?? "center";
+      const input = this.#inputs[i];
+
+      this.#container
+        .getElementsByClassName(`remote-pane-${pane}`)[0]
+        .appendChild(input.domElement);
+    }
+
+    // Start control loop (20Hz)
+    this.#intervalId = setInterval(() => {
+      this.#state.writeValueWithoutResponse(this.state);
+    }, 50);
+
+    // BLE disconnect listener
+    state.service.device.addEventListener("gattserverdisconnected", () => {
+      clearInterval(this.#intervalId);
+      
+      this.#intervalId = null;
+      this.#onDisconnect.forEach((cb) => cb());
+    });
   }
 
   /**
@@ -70,14 +94,31 @@ export class Robot {
    */
   onDisconnect(cb) {
     this.#onDisconnect.push(cb);
-    
-    // TODO: stop interval to send characteristic
   }
-  
+
+  /**
+   * Get the self-declared name of this robot
+   */
+  get name() {
+    return this.#name;
+  }
+
+  /**
+   * Get the N-bytes state for all of this robot's inputs. This is recalculated
+   * for each call, it is *not* the latest value sent to the robot.
+   */
+  get state() {
+    const bytes = new Uint8Array(this.#inputs.length);
+    for (let i = 0; i < this.#inputs.length; i++) {
+      bytes[i] = this.#inputs[i].state;
+    }
+    return bytes;
+  }
+
   /**
    * Get the top-most DOM element
    */
   get domElement() {
-    // TODO
+    return this.#container;
   }
 }

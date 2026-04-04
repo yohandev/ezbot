@@ -15,6 +15,7 @@
     "@clack/prompts": "^1.2.0",
     "//": "DO NOT CHANGE THIS VERSION (esptool-js). Others just don't work, idk why",
     "esptool-js": "0.5.0",
+    "nipplejs": "^0.10.2",
     "serialport": "^13.0.0"
   }
 }

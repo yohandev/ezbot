@@ -1,0 +1,286 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: sans-serif;
+  background: #111;
+  color: #fff;
+  user-select: none;
+}
+
+/* ── Header ── */
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+
+header h1 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+header button {
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+header button:hover {
+  background: #444;
+}
+
+/* ── Remote ── */
+
+main#remote {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#remote-unconnected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#remote-unconnected button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 32px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#remote-unconnected button:hover {
+  background: #1d4ed8;
+}
+
+#remote-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Remote layout ── */
+
+.remote-layout {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top grid: left / center / right. Empty panes collapse because
+   their content has no intrinsic width. */
+.remote-top-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  overflow: hidden;
+}
+
+.remote-pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.remote-pane-bottom {
+  height: 120px;
+  flex-shrink: 0;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 16px;
+  border-top: 1px solid #333;
+}
+
+.remote-pane-bottom:empty {
+  height: 0;
+  border-top: none;
+  padding: 0;
+}
+
+/* ── Joystick ── */
+
+.joystick-zone {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  touch-action: none;
+}
+
+/* ── Buttons ── */
+
+.button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  touch-action: none;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.08s, transform 0.08s;
+  flex-shrink: 0;
+}
+
+.button:active {
+  opacity: 1;
+  transform: scale(0.92);
+}
+
+.button.latched {
+  opacity: 1;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.45);
+}
+
+.button-red    { background: #e53e3e; }
+.button-blue   { background: #3182ce; }
+.button-green  { background: #38a169; }
+.button-orange { background: #dd6b20; }
+.button-purple { background: #805ad5; }
+.button-cyan   { background: #00b5d8; }
+
+/* ── Sliders ── */
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+}
+
+.slider-horizontal {
+  width: 80%;
+  height: 8px;
+}
+
+/* Vertical slider: writing-mode rotates the track without layout tricks */
+.slider-vertical {
+  writing-mode: vertical-lr;
+  direction: rtl; /* bottom = 0, top = max (feels natural) */
+  height: 60%;
+  width: 8px;
+}
+
+/* ── Upload firmware modal ── */
+
+#upload-firmware-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+#upload-firmware-overlay.active {
+  display: flex;
+}
+
+#upload-firmware-modal {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 24px;
+  min-width: 360px;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+#upload-firmware-modal h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+#upload-firmware-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+}
+
+#upload-firmware-close:hover {
+  color: #aaa;
+}
+
+#upload-firmware-button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+#upload-firmware-button:hover {
+  background: #1d4ed8;
+}
+
+#upload-firmware-log {
+  font-family: monospace;
+  font-size: 12px;
+  background: #000;
+  color: #0f0;
+  padding: 12px;
+  border-radius: 4px;
+  overflow-y: auto;
+  flex: 1;
+  max-height: 300px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
