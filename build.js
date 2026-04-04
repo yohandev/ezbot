@@ -47,12 +47,14 @@ async function build() {
       "src/upload/index.js",
       "src/index.html",
       "src/styles.css",
+      { in: "src/assets/chrome.svg", out: "assets/chrome" },
+      { in: "src/assets/bluefy.svg", out: "assets/bluefy" },
     ],
     outdir: "out",
     platform: "browser",
     target: ["chrome89", "firefox90", "safari15", "edge89"],
     splitting: true,
-    loader: { ".html": "copy" },
+    loader: { ".html": "copy", ".svg": "copy" },
     ...options,
   };
   if (serve) {
