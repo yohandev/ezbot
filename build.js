@@ -27,7 +27,7 @@ async function build() {
     minify: true,
     sourcemap: true,
     format: "esm",
-    plugins: [firmwarePlugin],
+    plugins: [firmwarePlugin, rebuildLogPlugin],
   };
 
   // CLI (node.js)
@@ -91,6 +91,18 @@ const firmwarePlugin = {
         watchDirs: [firmware.PATH],
         watchFiles: await firmware.watchedFiles(),
       };
+    });
+  },
+};
+
+/**
+ * @type {esbuild.Plugin}
+ */
+const rebuildLogPlugin = {
+  name: "rebuild-log",
+  setup(build) {
+    build.onEnd(() => {
+      console.log(`[${new Date().toLocaleTimeString()}] rebuilt`);
     });
   },
 };
