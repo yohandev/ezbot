@@ -108,14 +108,15 @@ class Remote:
         """
         self._ble_inputs_metadata.write(json.dumps(self._inputs_metadata).encode())
         self._running = True
-        
+
+        ble.config(gap_name=self._name)
         asyncio.create_task(self._serve())
         while True:
             print(f"Advertising as '{self._name}'...")
             try:
                 async with await ble.advertise(
                     250_000,
-                    name=self._name,
+                    name=self._name.encode(),
                     services=[Remote._EZBOT_SERVICE],
                 ) as connection:
                     print(f"Connected to {connection.device}")
