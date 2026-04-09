@@ -319,15 +319,15 @@ main#remote {
 
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: #fff;
 }
 
 .slider::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: #fff;
     border: none;
