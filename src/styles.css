@@ -575,6 +575,7 @@ main#remote {
     position: relative;
     max-height: 4.5em; /* ~3 lines at 1.5 line-height */
     overflow: hidden;
+    transition: max-height 0.2s ease;
 }
 
 .collapsible-body::after {
@@ -586,6 +587,16 @@ main#remote {
     height: 3em;
     background: linear-gradient(to bottom, transparent, #1a1a1a);
     pointer-events: none;
+    transition: height 0.2s ease;
+}
+
+/* Hover on a collapsed section: peek a little more content */
+.collapsible:not(.expanded):hover .collapsible-body {
+    max-height: 6.5em;
+}
+
+.collapsible:not(.expanded):hover .collapsible-body::after {
+    height: 1.5em;
 }
 
 .collapsible.expanded .collapsible-body {
