@@ -101,12 +101,14 @@ document
 
     remoteContainer.appendChild(robot.domElement);
     remoteContainer.hidden = false;
+    document.getElementById("info-footer").hidden = true;
 
     robot.onDisconnect(() => {
       headerRight.innerHTML = "";
       robot.domElement.remove();
       remoteContainer.hidden = true;
       remoteUnconnectedEl.hidden = false;
+      document.getElementById("info-footer").hidden = false;
     });
   });
 

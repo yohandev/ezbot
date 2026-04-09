@@ -392,6 +392,33 @@ main#remote {
     color: #aaa;
 }
 
+#info-footer {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8rem;
+}
+
+#info-footer a,
+#info-modal-footer a {
+    color: #7aa2f7;
+    text-decoration: none;
+}
+
+#info-footer a:hover,
+#info-modal-footer a:hover {
+    color: #a5c0ff;
+}
+
+#info-modal-footer {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #333;
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
 /* Scrollable content area inside the modal */
 #info-content {
     flex: 1;
