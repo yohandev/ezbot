@@ -6,6 +6,10 @@
   "author": "Yohan Guyomard <yohang@mit.edu>",
   "license": "MIT",
   "type": "module",
+  "scripts": {
+    "build": "yarn install && node build",
+    "serve": "yarn build --serve"
+  },
   "devDependencies": {
     "@types/w3c-web-serial": "^1.0.8",
     "esbuild": "^0.28.0",
