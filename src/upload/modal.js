@@ -57,7 +57,8 @@ document
         filters: [{ usbVendorId: 0x303a }],
       });
       writeLine("Starting upload...");
-      await uploadFirmware(port, "ezbot", writeLine);
+      const name = document.getElementById("robot-name-input").value.trim() || "Robot #1";
+      await uploadFirmware(port, name, writeLine);
       writeLine("Done.");
     } catch (err) {
       writeLine(`Error: ${err.message}`);

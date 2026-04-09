@@ -121,7 +121,10 @@
                     <p>Windows (PowerShell):</p>
                     <pre class="code-block">$env:EZBOT='[CDN_URL]'; irm "$env:EZBOT/install.ps1" | iex</pre>
                     <p>Or flash via USB from this browser:</p>
-                    <button id="upload-firmware-button">Upload via USB</button>
+                    <div class="upload-row">
+                        <button id="upload-firmware-button">Upload via USB</button>
+                        <input id="robot-name-input" type="text" placeholder="Robot name" />
+                    </div>
                     <pre id="upload-firmware-log" hidden></pre>
                 </div>
             </div>

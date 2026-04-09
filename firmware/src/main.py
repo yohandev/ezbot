@@ -6,7 +6,7 @@ from remote import Remote
 from servo import Servo
 
 # The specified name here will show up in the Bluetooth selector
-remote = Remote("ROBOT_NAME_PLACEHOLDER")
+remote = Remote("ROBOT_NAME_PLACEHOLDER".strip())
 
 motion_joystick = remote.joystick()
 led_button = remote.button()

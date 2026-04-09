@@ -453,6 +453,31 @@ main#remote {
     white-space: pre;
 }
 
+.upload-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-row input {
+    flex: 1;
+    background: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    outline: none;
+}
+
+.upload-row input::placeholder {
+    color: #666;
+}
+
+.upload-row input:focus {
+    border-color: #2563eb;
+}
+
 #upload-firmware-button {
     background: #2563eb;
     color: #fff;

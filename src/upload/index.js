@@ -25,8 +25,18 @@ export async function uploadFirmware(port, name, writeLine) {
     "Board isn't in bootloader mode. Hold BOOT and press RST!",
   );
 
+  // Rewrite the robot's name in firmware
+  const fileArray = [
+    firmware[0],
+    {
+      data: firmware[1].data.replace("ROBOT_NAME_PLACEHOLDER", name.slice(0, 22).padEnd(22, " ")),
+      address: firmware[1].address,
+    },
+  ];
+  console.log(fileArray);
+
   await loader.writeFlash({
-    fileArray: firmware, // TODO: modify firmware to set name
+    fileArray,
     flashSize: "keep",
     eraseAll: false,
     compress: true,
