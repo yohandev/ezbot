@@ -52,7 +52,10 @@
                             <p>
                                 First you should order the PCBs. Note that this will take 2-3 weeks to
                                 arrive, so plan ahead. I recommend using JLCPCB (not affiliated, but the
-                                bill of materials is hard-coded to their parts inventory), see below:
+                                bill of materials is hard-coded to their parts inventory). Download the
+                                file
+                                <a href="https://github.com/yohandev/ezbot/raw/refs/heads/main/pcb/production.zip">here</a>
+                                and follow the guide below:
                             </p>
                             <video id="info-video-pcb" class="guide-video" controls>
                                 <source id="info-video-pcb-src" src="" type="video/mp4" />
@@ -96,7 +99,8 @@
                             <br>
                             <p>
                                 <img id="info-img-enclosure" src="" alt="Enclosure" class="list-item-image" />
-                                Lastly, you can 3D print the enclosure. The files are <a href="">here</a>.
+                                Lastly, you can 3D print the enclosure. The files are
+                                <a href="https://github.com/yohandev/ezbot/tree/main/src/assets/enclosure">here</a>.
                             </p>
                         </div>
                     </div>
@@ -107,36 +111,20 @@
                         </h3>
                         <div class="collapsible-body">
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Fusce euismod convallis velit,
-                                eu auctor lacus vehicula sit amet. Morbi
-                                fringilla commodo orci, in vulputate elit
-                                iaculis a. Phasellus vehicula risus a dui
-                                convallis, vel convallis nulla sodales.
+                                By default, only motors <b>M0</b> and <b>M1</b>, and servo motor <b>#0</b> are enabled.
+                                The board supports up to 4 DC motors + 4 servo motors, but you'll have to customize the
+                                firmware!
                             </p>
+                            <br>
                             <p>
-                                Vestibulum ante ipsum primis in faucibus orci
-                                luctus et ultrices posuere cubilia curae; Cras
-                                eget sem nec diam molestie viverra. Integer
-                                facilisis leo in erat placerat, ac condimentum
-                                libero commodo. Nullam sit amet sapien vel
-                                sapien efficitur sodales.
+                                This is very simple, download <a href="https://thonny.org/">Thonny</a>, plug-in your
+                                board (make sure the original firmware is flashed, see below) and edit <b>main.py</b>.
                             </p>
+                            <br>
                             <p>
-                                Sed ut perspiciatis unde omnis iste natus error
-                                sit voluptatem accusantium doloremque
-                                laudantium, totam rem aperiam, eaque ipsa quae
-                                ab illo inventore veritatis et quasi architecto
-                                beatae vitae dicta sunt explicabo. Nemo enim
-                                ipsam voluptatem quia voluptas sit aspernatur
-                                aut odit aut fugit.
-                            </p>
-                            <p>
-                                At vero eos et accusamus et iusto odio
-                                dignissimos ducimus qui blanditiis praesentium
-                                voluptatum deleniti atque corrupti quos dolores
-                                et quas molestias excepturi sint occaecati
-                                cupiditate non provident.
+                                You can also ask an LLM for help, it should be able to do this no-issue. It may be useful
+                                to give it the following link for context:
+                                <i>https://github.com/yohandev/ezbot/tree/main/firmware/src</i>
                             </p>
                         </div>
                     </div>

@@ -8,6 +8,8 @@ from servo import Servo
 # The specified name here will show up in the Bluetooth selector
 remote = Remote("ROBOT_NAME_PLACEHOLDER".strip())
 
+# Add as many of these `remote.[joystick|button|slider]` and they
+# will show up on the remote control
 motion_joystick = remote.joystick(pane=Pane.LEFT)
 led_button = remote.button(color=Color.BLUE)
 servo_slider = remote.slider()
@@ -15,6 +17,13 @@ servo_slider = remote.slider()
 left_motor = Motor(9, 10)
 right_motor = Motor(11, 12)
 servo_motor = Servo(35)
+
+# More motors (with their assigned GPIO pins):
+# motor2 = Motor(13, 14)
+# motor3 = Motor(21, 47)
+# servo1 = Servo(36)
+# servo2 = Servo(37)
+# servo3 = Servo(38)
 
 led = Pin(44, Pin.OUT)
 
