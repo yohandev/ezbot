@@ -1,12 +1,11 @@
-import "./info";
-
+let infoModulePromise = null;
 let uploadModulePromise = null;
 
 const overlayEl = document.getElementById("info-overlay");
 const logEl = document.getElementById("upload-firmware-log");
 
 document.querySelectorAll(".code-block").forEach((el) => {
-  el.textContent = el.textContent.replace(/\[CDN_URL\]/g, window.location.origin);
+  el.textContent = el.textContent.replace(/\[CDN_URL\]/g, window.location.href);
 
   const wrap = document.createElement("div");
   wrap.className = "code-block-wrap";
@@ -21,6 +20,7 @@ document.querySelectorAll(".code-block").forEach((el) => {
 });
 
 export function showInfoModal() {
+  infoModulePromise ??= import("./info");
   // Begin lazy-loading the large upload bundle in the background
   uploadModulePromise ??= import(".");
 
