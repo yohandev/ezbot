@@ -421,6 +421,52 @@ main#remote {
     line-height: 1.5;
 }
 
+#info-content a {
+    color: #7aa2f7;
+}
+
+#info-content a:hover {
+    color: #a5c0ff;
+}
+
+#info-content ul,
+#info-content ol {
+    font-size: 0.9rem;
+    color: #aaa;
+    line-height: 1.5;
+    padding-left: 1.4em;
+}
+
+#info-content li {
+    list-style: disc;
+    display: list-item;
+    margin-top: 12px;
+}
+
+#info-content li b {
+    display: block;
+}
+
+.guide-video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 6px;
+    background: #2a2a2a;
+    border: 1px solid #333;
+}
+
+.list-item-image {
+    display: block;
+    width: 50%;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #2a2a2a;
+    border: 1px solid #333;
+    margin: 6px auto;
+}
+
 .code-block-wrap {
     overflow-x: auto;
     border-radius: 4px;

@@ -1,3 +1,5 @@
+import "./info";
+
 let uploadModulePromise = null;
 
 const overlayEl = document.getElementById("info-overlay");

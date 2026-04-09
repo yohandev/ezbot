@@ -36,41 +36,67 @@
                 <button id="info-close" aria-label="Close">&#x2715;</button>
                 <div id="info-content">
                     <h2>ezbot</h2>
-                    <p>[project description]</p>
+                    <p>
+                        ezbot is a plug-n-play robotics platform. You don't need (any) electronics
+                        or software knowledge to make a remote-controlled robot &mdash; just wire
+                        up motors and a battery, then connect your phone via Bluetooth.
+                        <br><br>
+                        This is ideal for classroom environments where the focus <i>isn't</i> EECS,
+                        though ezbot is flexible enough for ambitious students to add more peripherals
+                        and customize the firmware (see below).
+                    </p>
 
                     <div class="collapsible">
                         <h3 class="collapsible-toggle">Getting hardware</h3>
                         <div class="collapsible-body">
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut
-                                enim ad minim veniam, quis nostrud exercitation
-                                ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat.
+                                First you should order the PCBs. Note that this will take 2-3 weeks to
+                                arrive, so plan ahead. I recommend using JLCPCB (not affiliated, but the
+                                bill of materials is hard-coded to their parts inventory), see below:
                             </p>
+                            <video id="info-video-pcb" class="guide-video" controls>
+                                <source id="info-video-pcb-src" src="" type="video/mp4" />
+                            </video>
                             <p>
-                                Duis aute irure dolor in reprehenderit in
-                                voluptate velit esse cillum dolore eu fugiat
-                                nulla pariatur. Excepteur sint occaecat
-                                cupidatat non proident, sunt in culpa qui
-                                officia deserunt mollit anim id est laborum.
-                                Pellentesque habitant morbi tristique senectus
-                                et netus et malesuada fames.
+                                The rest of the robot is up to you, but you should know a few things:
                             </p>
+                            <ul>
+                                <li>
+                                    <b>Battery</b>
+                                    <img id="info-img-battery" src="" alt="Battery" class="list-item-image" />
+                                    The PCB is designed for 2S (7.4V) batteries
+                                    (<a href="https://a.co/d/0duMaRrr">example</a>). Also note that the
+                                    boards come fully assembled if you followed the guide above,
+                                    <strong>except</strong> for the battery connector; make sure to get
+                                    some of those as well (<a href="https://a.co/d/0eCqGLfr">example</a>).
+                                </li>
+                                <li>
+                                    <b>DC motors</b>
+                                    <img id="info-img-dc-motors" src="" alt="DC motors" class="list-item-image" />
+                                    These are driven at the battery's voltage. Technically, this
+                                    is beyond the rating for those common hobbyist motors, but it should be fine.
+                                    Make sure to purchase the ones with header pin connectors
+                                    (<a href="https://a.co/d/0gdrZcwP">example</a>).
+                                </li>
+                                <li>
+                                    <b>Servo motors</b>
+                                    <img id="info-img-servo-motors" src="" alt="Servo motors" class="list-item-image" />
+                                    These are driven at 5V, so just about any hobbyist servo
+                                    will work (<a href="https://a.co/d/0eqcxUZT">example</a>).
+                                </li>
+                            </ul>
+                            <br>
                             <p>
-                                Curabitur pretium tincidunt lacus. Nulla gravida
-                                orci a odio. Nullam varius, turpis molestie
-                                dictum semper, est augue dignissim quam, in
-                                pretium sapien arcu quis dolor. Aliquam erat
-                                volutpat. Nam dui mi, tincidunt quis, accumsan
-                                porttitor, facilisis luctus, metus.
+                                When you receive the boards, you'll need to flash the firmware. This can be done
+                                via this website (scroll down). If you're flashing 10+ boards, I recommend using
+                                the command-line interface (scroll down), which does this process semi-automatically
+                                (plug a board, wait, unplug, repeat). This requires
+                                <a href="https://nodejs.org/en/download/current">node.js</a>.
                             </p>
+                            <br>
                             <p>
-                                Phasellus ultrices nulla quis nibh. Quisque a
-                                lectus. Donec consectetuer ligula vulputate sem
-                                tristique cursus. Nam nulla quam, gravida non,
-                                commodo a, sodales sit amet, nisi.
+                                <img id="info-img-enclosure" src="" alt="Enclosure" class="list-item-image" />
+                                Lastly, you can 3D print the enclosure. The files are <a href="">here</a>.
                             </p>
                         </div>
                     </div>

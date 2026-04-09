@@ -52,7 +52,14 @@ async function build() {
     platform: "browser",
     target: ["chrome89", "firefox90", "safari15", "edge89"],
     splitting: true,
-    loader: { ".html": "copy", ".svg": "file", ".webp": "file" },
+    loader: {
+      ".html": "copy",
+      ".svg": "file",
+      ".webp": "file",
+      ".jpg": "file",
+      ".png": "file",
+      ".mp4": "file",
+    },
     ...options,
   };
   if (serve) {
