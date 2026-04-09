@@ -23,8 +23,8 @@ async def loop():
     # Arcade / differential drive: forward = y, turn = x
     x = motion_joystick.x
     y = motion_joystick.y
-    left_motor.write(max(-1.0, min(1.0, y + x)))
-    right_motor.write(max(-1.0, min(1.0, y - x)))
+    left_motor.write(max(-1.0, min(1.0, y - x)))
+    right_motor.write(max(-1.0, min(1.0, y + x)))
     
     # Servo slider
     servo_motor.write(servo_slider.value * 180)
