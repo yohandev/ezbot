@@ -2,14 +2,14 @@ import asyncio
 
 from machine import Pin
 from motor import Motor
-from remote import Remote
+from remote import Remote, Pane, Color
 from servo import Servo
 
 # The specified name here will show up in the Bluetooth selector
 remote = Remote("ROBOT_NAME_PLACEHOLDER".strip())
 
-motion_joystick = remote.joystick()
-led_button = remote.button()
+motion_joystick = remote.joystick(pane=Pane.LEFT)
+led_button = remote.button(color=Color.BLUE)
 servo_slider = remote.slider()
 
 left_motor = Motor(9, 10)
