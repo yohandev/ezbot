@@ -131,9 +131,9 @@
 
                     <h3>Flash the firmware</h3>
                     <p>Mac / Linux:</p>
-                    <pre class="code-block">export EZBOT=[CDN_URL]; curl -fsSL "$EZBOT/install.sh" | sh</pre>
+                    <pre class="code-block">export EZBOT=[CDN_URL]; curl -fsSL "$EZBOT/cli/install.sh" | sh</pre>
                     <p>Windows (PowerShell):</p>
-                    <pre class="code-block">$env:EZBOT='[CDN_URL]'; irm "$env:EZBOT/install.ps1" | iex</pre>
+                    <pre class="code-block">$env:EZBOT='[CDN_URL]'; irm "$env:EZBOT/cli/install.ps1" | iex</pre>
                     <p>Or flash via USB from this browser:</p>
                     <div class="upload-row">
                         <button id="upload-firmware-button">Upload via USB</button>

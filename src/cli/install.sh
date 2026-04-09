@@ -24,7 +24,7 @@ echo "Installing ezbot CLI..."
 mkdir -p "$INSTALL_DIR" "$BIN_DIR"
 
 echo "Downloading CLI bundle..."
-curl -fsSL "$EZBOT/cli.cjs" -o "$INSTALL_DIR/cli.cjs"
+curl -fsSL "$EZBOT/cli.mjs" -o "$INSTALL_DIR/cli.mjs"
 
 echo "Installing native serial port driver (this may take a moment)..."
 printf '{"name":"ezbot-runtime","private":true,"dependencies":{"serialport":"^13.0.0"}}' \
@@ -34,14 +34,10 @@ npm install --prefix "$INSTALL_DIR" --omit=dev --silent
 # Launcher sets EZBOT_INSTALL_DIR so cli.js can offer to uninstall itself
 cat > "$BIN_DIR/ezbot" << 'LAUNCHER'
 #!/bin/sh
-EZBOT_INSTALL_DIR="$HOME/.ezbot" exec node "$HOME/.ezbot/cli.cjs" "$@"
+EZBOT_INSTALL_DIR="$HOME/.ezbot" exec node "$HOME/.ezbot/cli.mjs" "$@"
 LAUNCHER
 chmod +x "$BIN_DIR/ezbot"
 
 echo ""
-echo "Done! Run: $BIN_DIR/ezbot"
-if ! echo ":$PATH:" | grep -q ":$BIN_DIR:"; then
-  echo ""
-  echo "To use 'ezbot' from anywhere, add this to your ~/.zshrc or ~/.bashrc:"
-  echo "  export PATH=\"\$HOME/.ezbot/bin:\$PATH\""
-fi
+echo "Done! Launching ezbot..."
+exec "$BIN_DIR/ezbot" < /dev/tty

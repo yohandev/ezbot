@@ -19,7 +19,7 @@ Write-Host "Installing ezbot CLI..."
 New-Item -ItemType Directory -Force -Path $INSTALL_DIR, $BIN_DIR | Out-Null
 
 Write-Host "Downloading CLI bundle..."
-Invoke-WebRequest -Uri "$EZBOT/cli.cjs" -OutFile "$INSTALL_DIR\cli.cjs"
+Invoke-WebRequest -Uri "$EZBOT/cli.mjs" -OutFile "$INSTALL_DIR\cli.mjs"
 
 Write-Host "Installing native serial port driver..."
 '{"name":"ezbot-runtime","private":true,"dependencies":{"serialport":"^13.0.0"}}' |
@@ -30,9 +30,9 @@ npm install --prefix $INSTALL_DIR --omit=dev --silent
 @"
 @echo off
 set EZBOT_INSTALL_DIR=%USERPROFILE%\.ezbot
-node "%USERPROFILE%\.ezbot\cli.cjs" %*
+node "%USERPROFILE%\.ezbot\cli.mjs" %*
 "@ | Set-Content "$BIN_DIR\ezbot.cmd"
 
 Write-Host ""
-Write-Host "Done! Run: $BIN_DIR\ezbot.cmd"
-Write-Host "Add $BIN_DIR to your PATH to use 'ezbot' from anywhere."
+Write-Host "Done! Launching ezbot..."
+Start-Process -FilePath "$BIN_DIR\ezbot.cmd" -Wait -NoNewWindow
