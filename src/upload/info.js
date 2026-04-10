@@ -1,3 +1,4 @@
+import heroVideo from "../assets/info/hero.mp4";
 import pcbInstructions from "../assets/info/pcb_instructions.mp4";
 import batteryImg from "../assets/info/battery.png";
 import dcMotorImg from "../assets/info/dc_motor.png";
@@ -5,6 +6,9 @@ import servoMotorImg from "../assets/info/servo_motor.png";
 import enclosureImg from "../assets/info/enclosure.png";
 
 const abs = (path) => new URL(path, import.meta.url).href;
+
+document.getElementById("info-video-hero-src").src = abs(heroVideo);
+document.getElementById("info-video-hero").load();
 
 document.getElementById("info-video-pcb-src").src = abs(pcbInstructions);
 document.getElementById("info-video-pcb").load();
